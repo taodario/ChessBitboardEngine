@@ -10,31 +10,90 @@ import java.util.*;
  */
 public class BoardGeneration {
     public static void initiateStandardChess() {
-        long WP=0L,WN=0L,WB=0L,WR=0L,WQ=0L,WK=0L,BP=0L,BN=0L,BB=0L,BR=0L,BQ=0L,BK=0L;  // white pawn: WP, White Knight: WN. When we first initiate them, we make them all zeros. Says every board is empty of pieces. There are 12 (6 unique pieces * 2 colours)
-        // long makes it 64 bits; int would only be 32 bits
-        // don't worry about the 'L'.
+        long WP=0L,WN=0L,WB=0L,WR=0L,WQ=0L,WK=0L,BP=0L,BN=0L,BB=0L,BR=0L,BQ=0L,BK=0L;
         String chessBoard[][]={
                 {"r","n","b","q","k","b","n","r"},
+                {"p","p","p","p","p","p","p","p"},
+                {" "," "," "," "," "," "," "," "},
+                {" "," "," "," "," ","p"," "," "},
+                {" ","p"," "," ","Q"," "," "," "},
+                {" "," "," "," "," "," "," "," "},
+                {"P","P","P","P","P","P","P","P"},
+                {"R","N","B","Q","K","B","N","R"}};
+        arrayToBitboards(chessBoard,WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK);
+    }
+    public static void initiateChess960() {
+        long WP=0L,WN=0L,WB=0L,WR=0L,WQ=0L,WK=0L,BP=0L,BN=0L,BB=0L,BR=0L,BQ=0L,BK=0L;
+        String chessBoard[][]={
+                {" "," "," "," "," "," "," "," "},
                 {"p","p","p","p","p","p","p","p"},
                 {" "," "," "," "," "," "," "," "},
                 {" "," "," "," "," "," "," "," "},
                 {" "," "," "," "," "," "," "," "},
                 {" "," "," "," "," "," "," "," "},
                 {"P","P","P","P","P","P","P","P"},
-                {"R","N","B","Q","K","B","N","R"}};
-        // there a method that converts the string of 64 into binary.
-        // two step process: first turns chessboard into a binary string, then turning string into long
-        arrayToBitboards(chessBoard,WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK);  // we send the 2D array of strings, and we send the 12 bitboards to it
+                {" "," "," "," "," "," "," "," "}};
+        //step 1:
+        int random1=(int)(Math.random()*8);
+        chessBoard[0][random1]="b";
+        chessBoard[7][random1]="B";
+        //step 2:
+        int random2=(int)(Math.random()*8);
+        while (random2%2==random1%2) {
+            random2=(int)(Math.random()*8);
+        }
+        chessBoard[0][random2]="b";
+        chessBoard[7][random2]="B";
+        //step 3:
+        int random3=(int)(Math.random()*8);
+        while (random3==random1 || random3==random2) {
+            random3=(int)(Math.random()*8);
+        }
+        chessBoard[0][random3]="q";
+        chessBoard[7][random3]="Q";
+        //step 4:
+        int random4a=(int)(Math.random()*5);
+        int counter=0;
+        int loop=0;
+        while (counter-1<random4a) {
+            if (" ".equals(chessBoard[0][loop])) {counter++;}
+            loop++;
+        }
+        chessBoard[0][loop-1]="n";
+        chessBoard[7][loop-1]="N";
+        int random4b=(int)(Math.random()*4);
+        counter=0;
+        loop=0;
+        while (counter-1<random4b) {
+            if (" ".equals(chessBoard[0][loop])) {counter++;}
+            loop++;
+        }
+        chessBoard[0][loop-1]="n";
+        chessBoard[7][loop-1]="N";
+        //step 5:
+        counter=0;
+        while (!" ".equals(chessBoard[0][counter])) {
+            counter++;
+        }
+        chessBoard[0][counter]="r";
+        chessBoard[7][counter]="R";
+        while (!" ".equals(chessBoard[0][counter])) {
+            counter++;
+        }
+        chessBoard[0][counter]="k";
+        chessBoard[7][counter]="K";
+        while (!" ".equals(chessBoard[0][counter])) {
+            counter++;
+        }
+        chessBoard[0][counter]="r";
+        chessBoard[7][counter]="R";
+        arrayToBitboards(chessBoard,WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK);
     }
-
-    // the method arrayToBitboards
     public static void arrayToBitboards(String[][] chessBoard,long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK) {
-        String Binary;  // declare new string variable called Binary.
-        for (int i=0;i<64;i++) {  // loops through each square (code below executed for every square)
-            Binary="0000000000000000000000000000000000000000000000000000000000000000";  // 64 bits
-            Binary=Binary.substring(i+1)+"1"+Binary.substring(0, i);  // places a "1" to whatever location i is at, from 0 to 64. Starting from RHS going left.
-            // on the first iteration of the for loop, the last number would be 1: 0000000000000000000000000000000000000000000000000000000000000001
-
+        String Binary;
+        for (int i=0;i<64;i++) {
+            Binary="0000000000000000000000000000000000000000000000000000000000000000";
+            Binary=Binary.substring(i+1)+"1"+Binary.substring(0, i);
             switch (chessBoard[i/8][i%8]) {
                 case "P": WP+=convertStringToBitboard(Binary);
                     break;
@@ -63,23 +122,25 @@ public class BoardGeneration {
             }
         }
         drawArray(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK);
+        UserInterface.WP=WP; UserInterface.WN=WN; UserInterface.WB=WB;
+        UserInterface.WR=WR; UserInterface.WQ=WQ; UserInterface.WK=WK;
+        UserInterface.BP=BP; UserInterface.BN=BN; UserInterface.BB=BB;
+        UserInterface.BR=BR; UserInterface.BQ=BQ; UserInterface.BK=BK;
     }
     public static long convertStringToBitboard(String Binary) {
-        if (Binary.charAt(0)=='0') { //not going to be a negative number
+        if (Binary.charAt(0)=='0') {//not going to be a negative number
             return Long.parseLong(Binary, 2);
         } else {
             return Long.parseLong("1"+Binary.substring(2), 2)*2;
         }
     }
-
-    // this method will redraw the array for the console
     public static void drawArray(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK) {
         String chessBoard[][]=new String[8][8];
-        for (int i=0;i<64;i++) {  // creates a new array and sets them all into an empty space
+        for (int i=0;i<64;i++) {
             chessBoard[i/8][i%8]=" ";
         }
         for (int i=0;i<64;i++) {
-            if (((WP>>i)&1)==1) {chessBoard[i/8][i%8]="P";}  // we will go through the bitwise operations WP>>i when ready
+            if (((WP>>i)&1)==1) {chessBoard[i/8][i%8]="P";}
             if (((WN>>i)&1)==1) {chessBoard[i/8][i%8]="N";}
             if (((WB>>i)&1)==1) {chessBoard[i/8][i%8]="B";}
             if (((WR>>i)&1)==1) {chessBoard[i/8][i%8]="R";}
