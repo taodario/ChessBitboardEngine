@@ -15,13 +15,15 @@ public class BoardGeneration {
                 {"r","n","b","q","k","b","n","r"},
                 {"p","p","p","p","p","p","p","p"},
                 {" "," "," "," "," "," "," "," "},
-                {" "," "," "," "," ","p"," "," "},
-                {" ","p"," "," ","Q"," "," "," "},
+                {" "," "," "," "," "," "," "," "},
+                {" "," "," "," "," "," "," "," "},
                 {" "," "," "," "," "," "," "," "},
                 {"P","P","P","P","P","P","P","P"},
                 {"R","N","B","Q","K","B","N","R"}};
         arrayToBitboards(chessBoard,WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK);
     }
+
+    // Chess960 will not be needed
     public static void initiateChess960() {
         long WP=0L,WN=0L,WB=0L,WR=0L,WQ=0L,WK=0L,BP=0L,BN=0L,BB=0L,BR=0L,BQ=0L,BK=0L;
         String chessBoard[][]={

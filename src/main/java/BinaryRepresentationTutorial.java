@@ -2,7 +2,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.math.BigDecimal;
 import java.util.Scanner;
-public class BinaryRepresentationTut {
+public class BinaryRepresentationTutorial {
     public static void main(String[] args) throws Exception{
         String operation;
         Scanner consoleinput=new Scanner(System.in);
